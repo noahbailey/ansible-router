@@ -6,11 +6,11 @@ The purpose of this module is to quickly automate the process of provisioning an
 | Currently Supported                                       | Planned Feature                     | Unplanned but neat                             |
 | --------------------------------------------------------- | ----------------------------------- | ---------------------------------------------- |
 | Network interfaces with IPv4 static or dynamic addressing | IPv6 support                        | Multi-factor authentication for OpenVPN server |
-| VLAN trunking                                             | OpenVPN remote access server        | Automated IPsec config                         |
+| VLAN trunking                                             | EasyRSA integration                 | Automated IPsec config                         |
 | IPtables firewall with default or custom rules            | Linux network stack tuning          | Dynamic routing - FRR or Quagga                |
-| IPtables NAT with port-address translation                | DDNS with CloudFlare implementation | IDS/IPS - Snort of Suricata                    |
-| IPTables for port-forwarding from WAN interface           |                                     | BIND9 dynamic DNS                              |
-| isc-dhcp-server configuration                             |                                     |                                                |
+| IPtables NAT/Port forwarn                                 | DDNS with CloudFlare implementation | IDS/IPS - Snort of Suricata                    |
+| isc-dhcp-server configuration                             |                                     | BIND9 dynamic DNS                              |
+| OpenVPN Remove Access server                              |                                     |                                                |
 
 
 
@@ -106,5 +106,21 @@ firewall:
     -A INPUT -m comment --comment "Default deny rule" -j REJECT 
     -A FORWARD -m state --state RELATED,ESTABLISHED 
     -A FORWARD -i eth1 -o ens0 -m state --state NEW,RELATED,ESTABLISHED
+```
+
+
+
+## Variables - OpenVPN
+
+Set up a simple OpenVPN remote access server: 
+
+```yaml
+openvpn: 
+  port: 1194
+  proto: udp
+  tunnel_network: 10.8.0.0/25
+  routes: 
+    - 10.1.0.0/16 
+  redirect: true
 ```
 

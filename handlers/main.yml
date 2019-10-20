@@ -16,3 +16,8 @@
 
 - name: iptables_update_v6
   command: iptables-restore /etc/iptables/rules.v6
+
+- name: openvpn_restart
+  service: 
+    name: openvpn@server
+    state: restarted 

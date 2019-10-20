@@ -18,3 +18,7 @@
 
 - name: Configure ISC-DHCP-Server
   include_tasks: dhcpd.yml 
+
+- name: Configure OpenVPN Server
+  include_tasks: openvpn.yml 
+  when: openvpn is defined 

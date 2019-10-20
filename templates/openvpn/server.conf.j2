@@ -1,0 +1,46 @@
+#           \                 _)  |      |       
+#          _ \    __ \    __|  |  __ \   |   _ \ 
+#         ___ \   |   | \__ \  |  |   |  |   __/ 
+#       _/    _\ _|  _| ____/ _| _.__/  _| \___| 
+
+
+# -----------------------------------------------> Cryptography configuration 
+ca ca.crt
+cert server.crt
+key server.key  
+dh dh2048.pem
+tls-auth ta.key 0 
+auth SHA256
+cipher AES-256-GCM
+
+
+# -----------------------------------------------> Server connection params
+port {{ openvpn.port|default('1194',true) }}
+proto {{ openvpn.proto|default('1194',true) }}
+dev tun
+topology subnet 
+server {{ openvpn.tunnel_network|ipaddr('network') }} {{openvpn.tunnel_network|ipaddr('netmask')}}
+
+
+# -----------------------------------------------> Push client options 
+{% for route in openvpn.routes %}
+push "route {{route|ipaddr('network')}} {{route|ipaddr('netmask')}}"
+{% endfor %}
+{% if openvpn.redirect is defined and openvpn.redirect == true%}
+push "redirect-gateway def1 bypass-dhcp"
+{% endif %}
+{% for dns in dns_servers %}
+push "dhcp-option DNS {{ dns }}"
+{% endfor %}
+
+
+# -----------------------------------------------> General server options 
+persist-key
+persist-tun
+explicit-exit-notify 1
+keepalive 10 120
+user nobody
+group nogroup
+verb 3
+status /var/log/openvpn/openvpn-status.log
+ifconfig-pool-persist /var/log/openvpn/ipp.txt
