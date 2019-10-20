@@ -37,10 +37,10 @@ Minimum configuration: `eth0` connected to WAN and `eth1` connected to LAN.
 ```yaml
 router: 
   interfaces: 
-  	- name: eth0 
+    - name: eth0 
   	
-	- name: eth1 
-	  cidr: 192.168.100.1/24 
+    - name: eth1 
+      cidr: 192.168.100.1/24 
 ```
 
 
@@ -50,12 +50,12 @@ When DHCP parameters are defined a DHCP server will be installed and configured:
 ```yaml
 router: 
   interfaces: 
-	- name: eth0 
+    - name: eth0 
 
-	- name: eth1 
-  	  cidr: 192.168.100.1/24
-  	  dhcp_start: 192.168.100.50
-  	  dhcp_end: 192.168.100.250
+    - name: eth1 
+      cidr: 192.168.100.1/24
+      dhcp_start: 192.168.100.50
+      dhcp_end: 192.168.100.250
 ```
 
 
@@ -71,8 +71,8 @@ router:
       cidr: 192.168.100.1/24
       vlan: 100
       vlan_device: eth0
-  	  dhcp_start: 192.168.100.50
-  	  dhcp_end: 192.168.100.250
+      dhcp_start: 192.168.100.50
+      dhcp_end: 192.168.100.250
 ```
 
 
