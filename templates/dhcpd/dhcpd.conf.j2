@@ -1,0 +1,22 @@
+#           \                 _)  |      |       
+#          _ \    __ \    __|  |  __ \   |   _ \ 
+#         ___ \   |   | \__ \  |  |   |  |   __/ 
+#       _/    _\ _|  _| ____/ _| _.__/  _| \___| 
+
+
+option domain-name "{{ domain }}";
+option domain-name-servers {{ dns_servers | join(', ')}};
+
+default-lease-time {{lease|default('600')}};
+max-lease-time {{max_lease|default('7200')}};
+
+ddns-update-style none;
+
+{% for int in router.interfaces if int.dhcp_start is defined %}
+subnet {{ int.cidr|ipaddr('network') }} netmask {{ int.cidr|ipaddr('netmask') }} {
+  authoritative;
+  range {{ int.dhcp_start }} {{ int.dhcp_end }};
+  option routers {{ int.cidr|ipaddr('address') }};
+}
+
+{% endfor %}

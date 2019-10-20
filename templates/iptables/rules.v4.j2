@@ -1,0 +1,19 @@
+*filter
+:INPUT DROP [0:0]
+:FORWARD DROP [0:0]
+:OUTPUT ACCEPT [0:0]
+# -------> INPUT 
+-A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+-A INPUT -m comment --comment "Default deny rule" -j REJECT --reject-with icmp-host-unreachable
+# -------> FORWARD 
+-A FORWARD -i {{firewall.outside}} -o {{firewall.inside}} -m state --state RELATED,ESTABLISHED -j ACCEPT -m comment --comment "Outside->Inside"
+-A FORWARD -i {{firewall.inside}} -o {{firewall.outside}} -m state --state NEW,RELATED,ESTABLISHED -m comment --comment "Inside->Outside" -j ACCEPT
+-A FORWARD -m comment --comment "Default deny rule" -j REJECT --reject-with icmp-host-unreachable
+COMMIT
+*nat
+:PREROUTING ACCEPT [0:0]
+:INPUT ACCEPT [0:0]
+:POSTROUTING ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+-A POSTROUTING -o {{firewall.outside}} -j MASQUERADE
+COMMIT

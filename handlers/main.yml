@@ -1,0 +1,18 @@
+- name: sysctl_reload
+  command: sysctl --system
+
+- name: interfaces_reload  
+  service: 
+    name: networking
+    state: restarted 
+
+- name: dhcpd_restart
+  service: 
+    name: isc-dhcp-server
+    state: restarted 
+
+- name: iptables_update_v4
+  command: iptables-restore /etc/iptables/rules.v4
+
+- name: iptables_update_v6
+  command: iptables-restore /etc/iptables/rules.v6

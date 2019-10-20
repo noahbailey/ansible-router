@@ -1,0 +1,20 @@
+
+# --- Base router config: 
+
+- name: Config network interfaces 
+  template: 
+    src: templates/interfaces/interfaces.j2
+    dest: /etc/network/interfaces
+  notify: interfaces_reload 
+
+- name: Config Linux network stack 
+  template: 
+    src: templates/system/sysctl.conf 
+    dest: /etc/sysctl.conf 
+  notify: sysctl_reload
+
+- name: Configure Linux IPtables firewall
+  include_tasks: firewall.yml 
+
+- name: Configure ISC-DHCP-Server
+  include_tasks: dhcpd.yml 

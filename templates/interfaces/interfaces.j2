@@ -1,0 +1,25 @@
+#           \                 _)  |      |       
+#          _ \    __ \    __|  |  __ \   |   _ \ 
+#         ___ \   |   | \__ \  |  |   |  |   __/ 
+#       _/    _\ _|  _| ____/ _| _.__/  _| \___| 
+
+source /etc/network/interfaces.d/*
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+
+{% for int in router.interfaces %}
+auto {{ int.name }}
+{% if int.cidr is not defined %}
+iface {{ int.name }} inet dhcp
+{% else %}
+iface {{ int.name }} inet static
+    address {{ int.cidr }}
+{% if  int.vlan_device is defined %}
+    vlan_raw_device {{ int.vlan_device }}
+{% endif %}
+{% endif %}
+
+{% endfor %}
