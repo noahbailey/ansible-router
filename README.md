@@ -3,29 +3,14 @@ Simple Linux router implementation for Debian + Netfilter/IPtables
 
 The purpose of this module is to quickly automate the process of provisioning and configuring a Linux router geared towards home/small business. 
 
-#### Currently supported features: 
-
-* Network interfaces with IPv4 static or dynamic addressing
-* VLAN trunking
-* IPtables firewall with default or custom rules
-* IPtables NAT with port-address translation
-* IPTables for port-forwarding from WAN interface
-* isc-dhcp-server configuration 
-
-#### Planned features
-
-* IPv6 support
-* OpenVPN remote access server 
-* Linux network stack tuning
-* DDNS with CloudFlare implementation 
-
-#### Cool features that aren't planned
-
-* Multi-factor authentication for OpenVPN server
-* Automated IPsec config 
-* Dynamic routing - FRR or Quagga 
-* IDS/IPS - Snort of Suricata 
-* BIND9 dynamic DNS
+| Currently Supported                                       | Planned Feature                     | Unplanned but neat                             |
+| --------------------------------------------------------- | ----------------------------------- | ---------------------------------------------- |
+| Network interfaces with IPv4 static or dynamic addressing | IPv6 support                        | Multi-factor authentication for OpenVPN server |
+| VLAN trunking                                             | OpenVPN remote access server        | Automated IPsec config                         |
+| IPtables firewall with default or custom rules            | Linux network stack tuning          | Dynamic routing - FRR or Quagga                |
+| IPtables NAT with port-address translation                | DDNS with CloudFlare implementation | IDS/IPS - Snort of Suricata                    |
+| IPTables for port-forwarding from WAN interface           |                                     | BIND9 dynamic DNS                              |
+| isc-dhcp-server configuration                             |                                     |                                                |
 
 
 
@@ -47,17 +32,15 @@ Then, include the role using a top level playbook:
 
 ## Variables - Router
 
-Minimum configuration: 
+Minimum configuration: `eth0` connected to WAN and `eth1` connected to LAN. 
 
 ```yaml
 router: 
   interfaces: 
-  	# -- The WAN Interface - DHCP client
   	- name: eth0 
   	
-  	# -- The Inside interface
-  	- name: eth1 
-  	  cidr: 192.168.100.1/24
+	- name: eth1 
+	  cidr: 192.168.100.1/24 
 ```
 
 
@@ -67,11 +50,9 @@ When DHCP parameters are defined a DHCP server will be installed and configured:
 ```yaml
 router: 
   interfaces: 
-  	# -- The WAN Interface - DHCP client
-  	- name: eth0 
-  	
-  	# -- The Inside interface
-  	- name: eth1 
+	- name: eth0 
+
+	- name: eth1 
   	  cidr: 192.168.100.1/24
   	  dhcp_start: 192.168.100.50
   	  dhcp_end: 192.168.100.250
@@ -117,7 +98,7 @@ If a more complex configuration is desired, rules can be specified in the `firew
 ```yaml
 firewall: 
   rules: |
-      *filter
+    *filter
     :INPUT DROP [0:0]
     :FORWARD DROP [0:0]
     :OUTPUT ACCEPT [0:0]
