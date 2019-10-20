@@ -38,7 +38,7 @@ Minimum configuration: `eth0` connected to WAN and `eth1` connected to LAN.
 router: 
   interfaces: 
     - name: eth0 
-  	
+
     - name: eth1 
       cidr: 192.168.100.1/24 
 ```
