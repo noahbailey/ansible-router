@@ -8,9 +8,10 @@ The purpose of this module is to quickly automate the process of provisioning an
 | Network interfaces with IPv4 static or dynamic addressing | IPv6 support                        | Multi-factor authentication for OpenVPN server |
 | VLAN trunking                                             | EasyRSA integration                 | Automated IPsec config                         |
 | IPtables firewall with default or custom rules            | Linux network stack tuning          | Dynamic routing - FRR or Quagga                |
-| IPtables NAT/Port forwarn                                 | DDNS with CloudFlare implementation | IDS/IPS - Snort of Suricata                    |
-| isc-dhcp-server configuration                             |                                     | BIND9 dynamic DNS                              |
+| IPtables NAT/Port forwarn                                 | DDNS with CloudFlare implementation | BIND9 dynamic DNS                              |
+| isc-dhcp-server configuration                             |                                     |                                                |
 | OpenVPN Remove Access server                              |                                     |                                                |
+| Inline Suricata IDS/IPS                                   |                                     |                                                |
 
 
 
@@ -124,3 +125,18 @@ openvpn:
   redirect: true
 ```
 
+
+
+## Variables - Suricata
+
+When this config block is present, the scripts will install and configure Suricata as an inline IDS on the device. 
+
+```yaml
+suricata: 
+  interface: ens2 
+  inside_network: 10.55.0.0/16
+  ips_mode: false
+  filestore_mode: false
+```
+
+Additional features such as capturing network files and blocking malicious traffic can be enabled with these variables. 
