@@ -1,0 +1,6 @@
+#   Suricata rule updates. 
+#   This crontab automates the updates for rules, both from Emerging Threats and the external 
+
+# -> Every Six Hours - Update Suricata default rulesets
+00 0,6,12,18 * * *     root    (suricata-update && kill -USR2 `pidof suricata`)
+

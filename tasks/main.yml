@@ -19,6 +19,13 @@
 - name: Configure ISC-DHCP-Server
   include_tasks: dhcpd.yml 
 
+
+# --- Advanced functionality and security 
+
 - name: Configure OpenVPN Server
   include_tasks: openvpn.yml 
   when: openvpn is defined 
+
+- name: Configure inline IDS
+  include_tasks: suricata.yml 
+  when: suricata is defined 

@@ -21,3 +21,8 @@
   service: 
     name: openvpn@server
     state: restarted 
+
+- name: suricata_restart
+  service: 
+    name: suricata
+    state: restarted 
