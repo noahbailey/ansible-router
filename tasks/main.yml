@@ -26,6 +26,10 @@
   include_tasks: openvpn.yml 
   when: openvpn is defined 
 
+- name: Configure CloudFlare DDNS
+  include_tasks: cloudflare.yml
+  when: ddns is defined 
+
 - name: Configure inline IDS
   include_tasks: suricata.yml 
   when: suricata is defined 

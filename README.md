@@ -3,15 +3,16 @@ Simple Linux router implementation for Debian + Netfilter/IPtables
 
 The purpose of this module is to quickly automate the process of provisioning and configuring a Linux router geared towards home/small business. 
 
-| Currently Supported                                       | Planned Feature                     | Unplanned but neat                             |
-| --------------------------------------------------------- | ----------------------------------- | ---------------------------------------------- |
-| Network interfaces with IPv4 static or dynamic addressing | IPv6 support                        | Multi-factor authentication for OpenVPN server |
-| VLAN trunking                                             | EasyRSA integration                 | Automated IPsec config                         |
-| IPtables firewall with default or custom rules            | Linux network stack tuning          | Dynamic routing - FRR or Quagga                |
-| IPtables NAT/Port forwarn                                 | DDNS with CloudFlare implementation | BIND9 dynamic DNS                              |
-| isc-dhcp-server configuration                             |                                     |                                                |
-| OpenVPN Remove Access server                              |                                     |                                                |
-| Inline Suricata IDS/IPS                                   |                                     |                                                |
+| Currently Supported                                       | Planned Feature            | Unplanned but neat                             |
+| --------------------------------------------------------- | -------------------------- | ---------------------------------------------- |
+| Network interfaces with IPv4 static or dynamic addressing | IPv6 support               | Multi-factor authentication for OpenVPN server |
+| VLAN trunking                                             | EasyRSA integration        | Automated IPsec config                         |
+| IPtables firewall with default or custom rules            | Linux network stack tuning | Dynamic routing - FRR or Quagga                |
+| IPtables NAT/Port forwarn                                 |                            | BIND9 dynamic DNS                              |
+| isc-dhcp-server configuration                             |                            |                                                |
+| OpenVPN Remove Access server                              |                            |                                                |
+| Inline Suricata IDS/IPS                                   |                            |                                                |
+| DDNS with CloudFlare implementation                       |                            |                                                |
 
 
 
@@ -126,6 +127,32 @@ openvpn:
 ```
 
 
+
+## Variables - CloudFlare Dynamic DNS
+
+When this config block is present, the scripts will install and configure the `ddclient` service to perform regular checks for dynamic DNS addressing. 
+
+```yaml
+ddns:
+  interface: ens2
+  domains:
+    - mycoolsite.com
+    - login.mycoolsite.com
+    - api.mycoolsite.com
+```
+
+This also requires that cloudflare credentials are either in your vars file or in an ansible vault: 
+
+```yaml
+cloudflare:
+  email: coolguy@mycoolsite.com
+  domain: mycoolsite.com
+  api_key: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          .........................
+```
+
+Once configured, the  `ddclient` service runs with otherwise default settings and should log changes in public IPs. 
 
 ## Variables - Suricata
 
