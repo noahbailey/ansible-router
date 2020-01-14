@@ -1,0 +1,9 @@
+#           \                 _)  |      |       
+#          _ \    __ \    __|  |  __ \   |   _ \ 
+#         ___ \   |   | \__ \  |  |   |  |   __/ 
+#       _/    _\ _|  _| ____/ _| _.__/  _| \___| 
+
+run_daemon="true"
+daemon_interval="300"
+run_dhclient="false"
+run_ipup="false"

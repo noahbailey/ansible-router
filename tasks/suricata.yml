@@ -14,6 +14,15 @@
     mode: 0644
   notify: suricata_restart 
 
+- name: Suricata disable.conf
+  copy: 
+    src: files/disable.conf
+    dest: /etc/suricata/disable.conf
+    owner: root 
+    group: root 
+    mode: 0640
+  notify: suricata_rules_update
+
 - name: Schedule updates
   template: 
     src: templates/suricata/update.cron

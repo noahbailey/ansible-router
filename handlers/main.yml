@@ -22,7 +22,16 @@
     name: openvpn@server
     state: restarted 
 
+- name: ddclient_restart
+  service: 
+    name: ddclient
+    state: restarted 
+
 - name: suricata_restart
   service: 
     name: suricata
     state: restarted 
+
+- name: suricata_rules_update
+  shell: suricata-update && kill -USR2 `pidof suricata`
+
