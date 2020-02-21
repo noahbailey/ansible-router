@@ -306,19 +306,25 @@ logging:
 
 # Linux high speed capture support
 af-packet:
-  - interface: {{ suricata.interface }}
+{% for int in suricata.interfaces %}
+  - interface: {{ int }}
+    threads: 1
     cluster-id: 99
     cluster-type: cluster_flow
     defrag: yes
+    use-mmap: yes
+    tpacket-v3: yes
+{% endfor %}
   - interface: default
     threads: auto
 
 
 # Cross platform libpcap capture support
 pcap:
-  - interface: {{ suricata.interface }}
-    #buffer-size: 16777216
+{% for int in suricata.interfaces %}
+  - interface: {{ int }}
     checksum-checks: auto
+{% endfor %}
   - interface: default
     checksum-checks: auto
 
@@ -1208,88 +1214,23 @@ capture:
 # You can find more information at https://github.com/luigirizzo/netmap
 #
 netmap:
-   # To specify OS endpoint add plus sign at the end (e.g. "eth0+")
- - interface: {{ suricata.interface }}
-   # Number of receive threads. "auto" uses number of RSS queues on interface.
-   #threads: auto
-   # You can use the following variables to activate netmap tap or IPS mode.
-   # If copy-mode is set to ips or tap, the traffic coming to the current
-   # interface will be copied to the copy-iface interface. If 'tap' is set, the
-   # copy is complete. If 'ips' is set, the packet matching a 'drop' action
-   # will not be copied.
-   # To specify the OS as the copy-iface (so the OS can route packets, or forward
-   # to a service running on the same machine) add a plus sign at the end
-   # (e.g. "copy-iface: eth0+"). Don't forget to set up a symmetrical eth0+ -> eth0
-   # for return packets. Hardware checksumming must be *off* on the interface if
-   # using an OS endpoint (e.g. 'ifconfig eth0 -rxcsum -txcsum -rxcsum6 -txcsum6' for FreeBSD
-   # or 'ethtool -K eth0 tx off rx off' for Linux).
-   #copy-mode: tap
-   #copy-iface: eth3
-   # Set to yes to disable promiscuous mode
-   # disable-promisc: no
-   # Choose checksum verification mode for the interface. At the moment
-   # of the capture, some packets may be with an invalid checksum due to
-   # offloading to the network card of the checksum computation.
-   # Possible values are:
-   #  - yes: checksum validation is forced
-   #  - no: checksum validation is disabled
-   #  - auto: Suricata uses a statistical approach to detect when
-   #  checksum off-loading is used.
-   # Warning: 'checksum-validation' must be set to yes to have any validation
-   #checksum-checks: auto
-   # BPF filter to apply to this interface. The pcap filter syntax apply here.
-   #bpf-filter: port 80 or udp
- #- interface: eth3
-   #threads: auto
-   #copy-mode: tap
-   #copy-iface: eth2
-   # Put default values here
- - interface: default
+{% for int in suricata.interfaces %}
+  - interface: {{ int }}
+    threads: 1
+{% endfor %}
+  - interface: default
 
 # PF_RING configuration. for use with native PF_RING support
 # for more info see http://www.ntop.org/products/pf_ring/
 pfring:
-  - interface: {{ suricata.interface }}
-    # Number of receive threads. If set to 'auto' Suricata will first try
-    # to use CPU (core) count and otherwise RSS queue count.
-    threads: auto
-
-    # Default clusterid.  PF_RING will load balance packets based on flow.
-    # All threads/processes that will participate need to have the same
-    # clusterid.
+{% for int in suricata.interfaces %}
+  - interface: {{ int }}
+    threads: 1
     cluster-id: 99
-
-    # Default PF_RING cluster type. PF_RING can load balance per flow.
-    # Possible values are cluster_flow or cluster_round_robin.
     cluster-type: cluster_flow
+    checksum-checks: auto
+{% endfor %}
 
-    # bpf filter for this interface
-    #bpf-filter: tcp
-
-    # If bypass is set then the PF_RING hw bypass is activated, when supported
-    # by the interface in use. Suricata will instruct the interface to bypass
-    # all future packets for a flow that need to be bypassed.
-    #bypass: yes
-
-    # Choose checksum verification mode for the interface. At the moment
-    # of the capture, some packets may be with an invalid checksum due to
-    # offloading to the network card of the checksum computation.
-    # Possible values are:
-    #  - rxonly: only compute checksum for packets received by network card.
-    #  - yes: checksum validation is forced
-    #  - no: checksum validation is disabled
-    #  - auto: Suricata uses a statistical approach to detect when
-    #  checksum off-loading is used. (default)
-    # Warning: 'checksum-validation' must be set to yes to have any validation
-    #checksum-checks: auto
-  # Second interface
-  #- interface: eth1
-  #  threads: 3
-  #  cluster-id: 93
-  #  cluster-type: cluster_flow
-  # Put default values here
-  - interface: default
-    #threads: 2
 
 # For FreeBSD ipfw(8) divert(4) support.
 # Please make sure you have ipfw_load="YES" and ipdivert_load="YES"
@@ -1370,78 +1311,9 @@ mpipe:
 ## file configuration".
 ##
 
-#default-rule-path: /etc/suricata/rules
-#rule-files:
-# - suricata.rules
-
-##
-## Advanced rule file configuration.
-##
-## If this section is completely commented out then your configuration
-## is setup for suricata-update as it was most likely bundled and
-## installed with Suricata.
-##
-
-default-rule-path: /etc/suricata/rules
-
+default-rule-path: /var/lib/suricata/rules
 rule-files:
- - botcc.rules
- # - botcc.portgrouped.rules
- - ciarmy.rules
- - compromised.rules
- - drop.rules
- - dshield.rules
-# - emerging-activex.rules
- - emerging-attack_response.rules
- - emerging-chat.rules
- - emerging-current_events.rules
- - emerging-dns.rules
- - emerging-dos.rules
- - emerging-exploit.rules
- - emerging-ftp.rules
-# - emerging-games.rules
-# - emerging-icmp_info.rules
-# - emerging-icmp.rules
- - emerging-imap.rules
-# - emerging-inappropriate.rules
-# - emerging-info.rules
- - emerging-malware.rules
- - emerging-misc.rules
- - emerging-mobile_malware.rules
-# - emerging-netbios.rules
-# - emerging-p2p.rules
-# - emerging-policy.rules
- - emerging-pop3.rules
- - emerging-rpc.rules
-# - emerging-scada.rules
-# - emerging-scada_special.rules
- - emerging-scan.rules
- - emerging-shellcode.rules
- - emerging-smtp.rules
- - emerging-snmp.rules
- - emerging-sql.rules
- - emerging-telnet.rules
- - emerging-tftp.rules
- - emerging-trojan.rules
- - emerging-user_agents.rules
- - emerging-voip.rules
- - emerging-web_client.rules
- - emerging-web_server.rules
- - emerging-web_specific_apps.rules
- - emerging-worm.rules
- - tor.rules
-# - decoder-events.rules # available in suricata sources under rules dir
-# - stream-events.rules  # available in suricata sources under rules dir
- - http-events.rules    # available in suricata sources under rules dir
- - smtp-events.rules    # available in suricata sources under rules dir
- - dns-events.rules     # available in suricata sources under rules dir
- - tls-events.rules     # available in suricata sources under rules dir
-# - modbus-events.rules  # available in suricata sources under rules dir
-# - app-layer-events.rules  # available in suricata sources under rules dir
-# - dnp3-events.rules       # available in suricata sources under rules dir
-# - ntp-events.rules       # available in suricata sources under rules dir
-# - ipsec-events.rules       # available in suricata sources under rules dir
-# - kerberos-events.rules       # available in suricata sources under rules dir
+  - suricata.rules
 
 ##
 ## Auxiliary configuration files.
