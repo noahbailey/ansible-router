@@ -1,15 +1,16 @@
+---
 - name: sysctl_reload
   command: sysctl --system
 
-- name: interfaces_reload  
-  service: 
+- name: interfaces_reload
+  service:
     name: networking
-    state: restarted 
+    state: restarted
 
 - name: dhcpd_restart
-  service: 
+  service:
     name: isc-dhcp-server
-    state: restarted 
+    state: restarted
 
 - name: iptables_update_v4
   command: iptables-restore /etc/iptables/rules.v4
@@ -18,20 +19,19 @@
   command: iptables-restore /etc/iptables/rules.v6
 
 - name: openvpn_restart
-  service: 
+  service:
     name: openvpn@server
-    state: restarted 
+    state: restarted
 
 - name: ddclient_restart
-  service: 
+  service:
     name: ddclient
-    state: restarted 
+    state: restarted
 
 - name: suricata_restart
-  service: 
+  service:
     name: suricata
-    state: restarted 
+    state: restarted
 
 - name: suricata_rules_update
   shell: suricata-update && kill -USR2 `pidof suricata`
-

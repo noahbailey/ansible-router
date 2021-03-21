@@ -1,26 +1,28 @@
+---
+
 - name: OpenVPN Binaries
-  apt: 
-    state: present 
-    name: 
-      - openvpn 
-      - easy-rsa 
+  apt:
+    state: present
+    name:
+      - openvpn
+      - easy-rsa
 
-#make-cadir ~/openvpn-ca
-#./easyrsa init-pki
-#./easyrsa build-ca nopass
-#./easyrsa build-server-full server nopass
-#./easyrsa gen-dh
-#/usr/sbin/openvpn --genkey --secret pki/ta.key
-#./easyrsa build-client-full client nopass
+# make-cadir ~/openvpn-ca
+# ./easyrsa init-pki
+# ./easyrsa build-ca nopass
+# ./easyrsa build-server-full server nopass
+# ./easyrsa gen-dh
+# /usr/sbin/openvpn --genkey --secret pki/ta.key
+# ./easyrsa build-client-full client nopass
 
-- name: OpenVPN Config 
-  template: 
+- name: OpenVPN Config
+  template:
     src: templates/openvpn/server.conf.j2
     dest: /etc/openvpn/server.conf
   notify: openvpn_restart
 
 - name: OpenVPN Service
-  service: 
+  service:
     name: openvpn@server
     state: started
-    enabled: yes 
+    enabled: true

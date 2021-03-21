@@ -1,33 +1,34 @@
-# -> Cloudflare DDNS service 
+---
+# -> Cloudflare DDNS service
 
 - name: Install DDNS update modules
-  apt: 
-    name: 
+  apt:
+    name:
       - ddclient
       - libjson-perl
       - libjson-any-perl
-    state: present 
+    state: present
 
-- name: ddclient.conf 
+- name: ddclient.conf
   template:
     src: templates/cloudflare/ddclient.conf.j2
-    dest: /etc/ddclient.conf 
+    dest: /etc/ddclient.conf
     owner: root
-    group: root 
+    group: root
     mode: 0600
   notify: ddclient_restart
 
 - name: /etc/default/ddclient
-  copy: 
+  copy:
     src: templates/cloudflare/default_ddclient
     dest: /etc/default/ddclient
-    owner: root 
-    group: root 
+    owner: root
+    group: root
     mode: 0640
   notify: ddclient_restart
 
 - name: ddclient.service
-  service: 
+  service:
     name: ddclient
-    state: started 
-    enabled: true 
+    state: started
+    enabled: true

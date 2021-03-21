@@ -1,31 +1,32 @@
-- name: Install netfilter packages 
-  apt: 
-    state: present 
-    name: 
-      - iptables-persistent 
+---
+- name: Install netfilter packages
+  apt:
+    state: present
+    name:
+      - iptables-persistent
 
 
-# -- If rules are defined, we will use the custom spec. 
-#    Otherwise, specify the inside and outside interfaces for automated config. 
+# -- If rules are defined, we will use the custom spec.
+#    Otherwise, specify the inside and outside interfaces for automated config.
 
 # -- TODO: Create config set for IPv6 default rules
 
-- name: "IPtables :: IPv4 default rules" 
+- name: "IPtables :: IPv4 default rules"
   notify: iptables_update_v4
-  template: 
+  template:
     src: templates/iptables/rules.v4.j2
     dest: /etc/iptables/rules.v4
-  when: firewall.rules is not defined 
+  when: firewall.rules is not defined
 
 - name: "IPtables :: IPv4 custom rules"
   notify: iptables_update_v4
-  copy: 
+  copy:
     dest: /etc/iptables/rules.v4
-    content: | 
-      #     \                 _)  |      |       
-      #    _ \    __ \    __|  |  __ \   |   _ \ 
-      #   ___ \   |   | \__ \  |  |   |  |   __/ 
-      # _/    _\ _|  _| ____/ _| _.__/  _| \___| 
+    content: |
+      #     \                 _)  |      |
+      #    _ \    __ \    __|  |  __ \   |   _ \
+      #   ___ \   |   | \__ \  |  |   |  |   __/
+      # _/    _\ _|  _| ____/ _| _.__/  _| \___|
       #
       {{ firewall.rules }}
-  when: firewall.rules is defined 
+  when: firewall.rules is defined

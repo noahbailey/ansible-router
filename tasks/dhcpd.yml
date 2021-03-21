@@ -1,11 +1,13 @@
-- name: Install DHCPD packages 
-  apt: 
-    state: present 
-    name: 
+---
+
+- name: Install DHCPD packages
+  apt:
+    state: present
+    name:
       - isc-dhcp-server
 
-- name: Config DHCPD server 
-  template: 
+- name: Config DHCPD server
+  template:
     src: templates/dhcpd/dhcpd.conf.j2
     dest: /etc/dhcp/dhcpd.conf
   notify: dhcpd_restart

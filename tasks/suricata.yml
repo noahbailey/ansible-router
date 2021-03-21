@@ -1,38 +1,39 @@
+---
 
 - name: Suricata packages
-  apt: 
-    name: 
-      - suricata 
-    state: present 
+  apt:
+    name:
+      - suricata
+    state: present
 
 - name: Suricata config file
-  template: 
+  template:
     src: templates/suricata/suricata.yaml.j2
-    dest: /etc/suricata/suricata.yaml 
-    owner: root 
-    group: root 
+    dest: /etc/suricata/suricata.yaml
+    owner: root
+    group: root
     mode: 0644
-  notify: suricata_restart 
+  notify: suricata_restart
 
 - name: Suricata disable.conf
-  copy: 
+  copy:
     src: files/disable.conf
     dest: /etc/suricata/disable.conf
-    owner: root 
-    group: root 
+    owner: root
+    group: root
     mode: 0640
   notify: suricata_rules_update
 
 - name: Schedule updates
-  template: 
+  template:
     src: templates/suricata/update.cron
     dest: /etc/cron.d/suricata-rules-update
-    owner: root 
-    group: root 
-    mode: 0644 
+    owner: root
+    group: root
+    mode: 0644
 
 - name: Suricata service
-  service: 
+  service:
     name: suricata
-    state: started 
-    enabled: true 
+    state: started
+    enabled: true
